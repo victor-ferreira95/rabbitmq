@@ -29,7 +29,10 @@ async function sendOrderEvents() {
 
     const routingKey = order.event;
     const message = JSON.stringify(order);
-    await channel.publish(exchange, routingKey, Buffer.from(message) );
+    await channel.publish(exchange, routingKey, Buffer.from(message), {
+      persistent: true, // garante que a mensagem seja entregue mesmo se o RabbitMQ for reiniciado
+      deliveryMode: 2, // garante que a mensagem seja entregue mesmo se o RabbitMQ for reiniciado
+    });
   }
 
   setTimeout(() => {
